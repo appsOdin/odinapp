@@ -78,7 +78,7 @@ class LoginController {
         actions: [
           ElevatedButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("OK"),
+            child: const Text("Aceptar"),
           ),
         ],
       ),

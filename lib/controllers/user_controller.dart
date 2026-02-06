@@ -26,7 +26,7 @@ class RegisterController {
         email: emailCtrl.text.trim(),
       );
       
-      if (result['code'] == "200") {
+      if (result['code'] == Constants.successCode) {
         await _showAlert(context, "¡Éxito!", "Usuario registrado correctamente");
         return true;
       } else {
@@ -111,7 +111,7 @@ class RegisterController {
         actions: [
           ElevatedButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("OK"),
+            child: const Text("Aceptar"),
           )
         ],
       ),

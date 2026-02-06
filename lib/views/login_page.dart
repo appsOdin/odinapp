@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../controllers/login_controller.dart';
 import '../theme/app_theme.dart';
 class LoginPage extends StatefulWidget {
@@ -39,6 +40,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 50),
                 TextField(
                   controller: controller.usernameCtrl,
+                  inputFormatters: [LengthLimitingTextInputFormatter(20)], // Limitar a 20 caracteres
                   decoration: const InputDecoration(
                     labelText: 'Usuario',
                     fillColor: Color.fromARGB(255, 255, 255, 255),
@@ -56,6 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 24),
                 TextField(
                   controller: controller.passwordCtrl,
+                  inputFormatters: [LengthLimitingTextInputFormatter(20)], // Limitar a 20 caracteres
                   decoration: const InputDecoration(
                     labelText: 'Contraseña',
                     fillColor: Color.fromARGB(255, 255, 255, 255),

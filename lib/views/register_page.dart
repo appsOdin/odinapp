@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../controllers/user_controller.dart';
 import '../theme/app_theme.dart';
 
@@ -49,6 +50,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 24),
                 TextField(
                   controller: controller.idCtrl,
+                  inputFormatters: [LengthLimitingTextInputFormatter(30)],// Limitar a 30 caracteres
                   decoration: const InputDecoration(
                     labelText: 'Identificación',
                     fillColor: Color.fromARGB(255, 255, 255, 255),
@@ -67,6 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 16),
                 TextField(
                   controller: controller.nameCtrl,
+                  inputFormatters: [LengthLimitingTextInputFormatter(50)],
                   decoration: const InputDecoration(
                     labelText: 'Nombre',
                     fillColor: Color.fromARGB(255, 255, 255, 255),
@@ -84,6 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 16),
                 TextField(
                   controller: controller.lastNameCtrl,
+                  inputFormatters: [LengthLimitingTextInputFormatter(50)],
                   decoration: const InputDecoration(
                     labelText: 'Apellidos',
                     fillColor: Color.fromARGB(255, 255, 255, 255),
@@ -101,6 +105,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 16),
                 TextField(
                   controller: controller.usernameCtrl,
+                  inputFormatters: [LengthLimitingTextInputFormatter(20)],
                   decoration: const InputDecoration(
                     labelText: 'Usuario',
                     fillColor: Color.fromARGB(255, 255, 255, 255),
@@ -118,6 +123,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 16),
                 TextField(
                   controller: controller.passwordCtrl,
+                  inputFormatters: [LengthLimitingTextInputFormatter(20)], // Limitar a 20 caracteres
                   decoration: const InputDecoration(
                     labelText: 'Contraseña',
                     fillColor: Color.fromARGB(255, 255, 255, 255),
@@ -136,6 +142,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 16),
                 TextField(
                   controller: controller.emailCtrl,
+                  inputFormatters: [LengthLimitingTextInputFormatter(100)],
                   decoration: const InputDecoration(
                     labelText: 'Correo',
                     fillColor: Color.fromARGB(255, 255, 255, 255),
