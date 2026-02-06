@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LoginController {
   final usernameCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();
+  final emailCtrl = TextEditingController();
 
   Future<bool> login(BuildContext context) async {
     String user = usernameCtrl.text.trim();
@@ -37,7 +38,7 @@ class LoginController {
         return false;
       }
     } catch (e) {
-      _showAlert(context, "Error", "No se pudo conectar al servidor.\n$e");
+      _showAlert(context, "Error", "Ha ocurrido un error.\n$e");
       return false;
     }
   }
@@ -59,14 +60,46 @@ class LoginController {
       await prefs.remove('api_token');
       return true;
     } catch (e) {
-      _showAlert(context, "Error", "No se pudo cerrar sesión.\n$e");
+      _showAlert(context, "Error", "Ha ocurrido un error.\n$e");
       return false;
     }
   }
 
+  Future<bool> recover(BuildContext context) async {  
+    String email = emailCtrl.text.trim();
+
+    if (email.isEmpty) {
+      _showAlert(context, "Error", "Por favor, ingresa tu correo electrónico");
+      return false;
+    }
+
+    try {
+      // Llama al método recoverAccess del LoginService
+      final result = await LoginService.recoverAccess(email: email);
+
+      if (result['code'] == Constants.successCode) {
+        _showAlert(context, "¡Éxito!", "Instrucciones de recuperación enviadas a tu correo");
+        return true;
+      } else {
+        _showAlert(
+          context,
+          "Error",
+          result['message'] ?? "No se pudo iniciar recuperación",
+        );
+        return false;
+      }
+    } catch (e) {
+      _showAlert(context, "Error", "Ha ocurrido un error.\n$e");
+      return false;
+    }
+  }
+
+
+
   void dispose() {
     usernameCtrl.dispose();
     passwordCtrl.dispose();
+    emailCtrl.dispose();
   }
 
   void _showAlert(BuildContext context, String title, String msg) {

@@ -42,4 +42,21 @@ class LoginService {
       throw Exception('Error HTTP: ${response.statusCode}');
     }
   }
+
+  // recuperación de acceso (ejemplo: enviar email para resetear contraseña)
+  static Future<Map<String, dynamic>> recoverAccess({required String email}) async {
+    final url = Uri.parse("$_baseUrl/User/RecoverAccess");
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email}),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Error HTTP: ${response.statusCode}');
+    }
+  }
 }

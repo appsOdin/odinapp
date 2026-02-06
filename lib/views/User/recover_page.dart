@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../controllers/login_controller.dart';
-import '../theme/app_theme.dart';
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+import '../../controllers/login_controller.dart';
+import '../../theme/app_theme.dart';
+class RecoverPage extends StatefulWidget {
+  const RecoverPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RecoverPage> createState() => _RecoverPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RecoverPageState extends State<RecoverPage> {
   final LoginController controller = LoginController();
   bool loading = false;
 
@@ -39,10 +39,10 @@ class _LoginPageState extends State<LoginPage> {
                 const Image(image:  AssetImage('assets/img/logo.jpg'), height: 100),
                 const SizedBox(height: 50),
                 TextField(
-                  controller: controller.usernameCtrl,
+                  controller: controller.emailCtrl,
                   inputFormatters: [LengthLimitingTextInputFormatter(20)], // Limitar a 20 caracteres
                   decoration: const InputDecoration(
-                    labelText: 'Usuario',
+                    labelText: 'Correo electrónico',
                     fillColor: Color.fromARGB(255, 255, 255, 255),
                     filled: true,
                     enabledBorder: OutlineInputBorder(
@@ -55,26 +55,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
-                TextField(
-                  controller: controller.passwordCtrl,
-                  inputFormatters: [LengthLimitingTextInputFormatter(20)], // Limitar a 20 caracteres
-                  decoration: const InputDecoration(
-                    labelText: 'Contraseña',
-                    fillColor: Color.fromARGB(255, 255, 255, 255),
-                    filled: true,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                      borderSide: BorderSide(color: AppTheme.primaryColor, width: 1),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                      borderSide: BorderSide(color: AppTheme.primaryColor, width: 2),
-                    ),
-                  ),
-                  obscureText: true,
-                ),
-                const SizedBox(height: 20),
+               const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -82,10 +63,10 @@ class _LoginPageState extends State<LoginPage> {
                         ? null
                         : () async {
                             setState(() => loading = true);
-                            final success = await controller.login(context);
+                            final success = await controller.recover(context);
                             setState(() => loading = false);
                             if (success == true) {
-                              Navigator.pushReplacementNamed(context, '/home');
+                              Navigator.pushReplacementNamed(context, '/login');
                               
                             }
                           },
@@ -96,17 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
-                    child: Text(loading ? 'Ingresando...' : 'Ingresar'),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextButton(
-                  onPressed: () {
-                    // TODO: Implementar recuperación de contraseña
-                  },
-                  child: const Text(
-                    '¿Olvidó su contraseña?',
-                    style: TextStyle(color: AppTheme.primaryColor),
+                    child: Text(loading ? 'Recuperando...' : 'Recuperar'),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -114,15 +85,15 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      '¿No tiene una cuenta?',
+                      '¿Ya tiene una cuenta?',
                       style: TextStyle(color: Colors.black54),
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/register');
+                        Navigator.pop(context);
                       },
                       child: const Text(
-                        'Registrar',
+                        'Iniciar Sesión',
                         style: TextStyle(
                           color: AppTheme.primaryColor,
                           fontWeight: FontWeight.bold,
