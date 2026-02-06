@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:odinapp/Utlis/Constants.dart';
 import '../services/user_service.dart';
 
 class RegisterController {
@@ -14,27 +15,26 @@ class RegisterController {
     if (!_validateFields(context)) {
       return false;
     }
-
     try {
-      // Llamar al método createUser del ApiService
-      final result = await ApiService.createUser(
-        identificacion: idCtrl.text.trim(),
-        nombre: nameCtrl.text.trim(),
-        apellidos: lastNameCtrl.text.trim(),
-        usuario: usernameCtrl.text.trim(),
-        contrasena: passwordCtrl.text.trim(),
-        correo: emailCtrl.text.trim(),
+      // Llamar al método createUser del UserService
+      final result = await UserService.createSuscriber(
+        id: idCtrl.text.trim(),
+        name: nameCtrl.text.trim(),
+        lastName: lastNameCtrl.text.trim(),
+        username: usernameCtrl.text.trim(),
+        password: passwordCtrl.text.trim(),
+        email: emailCtrl.text.trim(),
       );
-
-      if (result['code'] == "00") {
-        _showAlert(context, "¡Éxito!", "Usuario registrado correctamente");
+      
+      if (result['code'] == "200") {
+        await _showAlert(context, "¡Éxito!", "Usuario registrado correctamente");
         return true;
       } else {
-        _showAlert(context, "Error", result['message'] ?? "Error al registrar usuario");
+        await _showAlert(context, "Error", result['message'] ?? "Error al registrar usuario");
         return false;
       }
     } catch (e) {
-      _showAlert(context, "Error", "No se pudo conectar al servidor.\n$e");
+      await _showAlert(context, "Error", "No se pudo conectar al servidor.\n$e");
       return false;
     }
   }
@@ -42,51 +42,51 @@ class RegisterController {
   bool _validateFields(BuildContext context) {
     // Validar que todos los campos estén llenos
     if (idCtrl.text.trim().isEmpty) {
-      _showAlert(context, "Error", "Por favor, ingrese su identificación");
+      _showAlert(context, "Datos incompletos", "Por favor, ingrese su identificación");
       return false;
     }
 
     if (nameCtrl.text.trim().isEmpty) {
-      _showAlert(context, "Error", "Por favor, ingrese su nombre");
+      _showAlert(context, "Datos incompletos", "Por favor, ingrese su nombre");
       return false;
     }
 
     if (lastNameCtrl.text.trim().isEmpty) {
-      _showAlert(context, "Error", "Por favor, ingrese sus apellidos");
+      _showAlert(context, "Datos incompletos", "Por favor, ingrese sus apellidos");
       return false;
     }
 
     if (usernameCtrl.text.trim().isEmpty) {
-      _showAlert(context, "Error", "Por favor, ingrese un usuario");
+      _showAlert(context, "Datos incompletos", "Por favor, ingrese un usuario");
       return false;
     }
 
     // Validar que el usuario tenga al menos 3 caracteres
     if (usernameCtrl.text.trim().length < 3) {
-      _showAlert(context, "Error", "El usuario debe tener al menos 3 caracteres");
+      _showAlert(context, "Datos incompletos", "El usuario debe tener al menos 3 caracteres");
       return false;
     }
 
     if (passwordCtrl.text.trim().isEmpty) {
-      _showAlert(context, "Error", "Por favor, ingrese una contraseña");
+      _showAlert(context, "Datos incompletos", "Por favor, ingrese una contraseña");
       return false;
     }
 
     // Validar que la contraseña tenga al menos 6 caracteres
     if (passwordCtrl.text.trim().length < 6) {
-      _showAlert(context, "Error", "La contraseña debe tener al menos 6 caracteres");
+      _showAlert(context, "Datos incompletos", "La contraseña debe tener al menos 6 caracteres");
       return false;
     }
 
     if (emailCtrl.text.trim().isEmpty) {
-      _showAlert(context, "Error", "Por favor, ingrese su correo electrónico");
+      _showAlert(context, "Datos incompletos", "Por favor, ingrese su correo electrónico");
       return false;
     }
 
     // Validar formato de correo electrónico
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(emailCtrl.text.trim())) {
-      _showAlert(context, "Error", "Por favor, ingrese un correo válido");
+      _showAlert(context, "Datos incompletos", "Por favor, ingrese un correo válido");
       return false;
     }
 
@@ -102,8 +102,8 @@ class RegisterController {
     emailCtrl.dispose();
   }
 
-  void _showAlert(BuildContext context, String title, String msg) {
-    showDialog(
+  Future<void> _showAlert(BuildContext context, String title, String msg) async {
+    return showDialog(
       context: context,
       builder: (_) => AlertDialog(
         title: Text(title),

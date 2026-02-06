@@ -2,31 +2,31 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../Utlis/constants.dart';
 
-class ApiService {
+class UserService {
   // Base URL de tu API –– cámbiala a la de tu backend
   static const String _baseUrl = Constants.apiBaseUrl;
 
   /// Crear usuario. Retorna el response completo
-  static Future<Map<String, dynamic>> createUser({
-    required String identificacion,
-    required String nombre,
-    required String apellidos,
-    required String usuario,
-    required String contrasena,
-    required String correo,
+  static Future<Map<String, dynamic>> createSuscriber({
+    required String id,
+    required String name,
+    required String lastName,
+    required String username,
+    required String password,
+    required String email,
   }) async {
-    final url = Uri.parse("$_baseUrl/User/CreateUser");
+    final url = Uri.parse("$_baseUrl/User/CreateSuscriber");
 
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'Identificacion': identificacion,
-        'Nombre': nombre,
-        'Apellidos': apellidos,
-        'Usuario': usuario,
-        'Contrasena': contrasena,
-        'Correo': correo,
+        'id': id,
+        'name': name,
+        'lastname': lastName,
+        'username': username,
+        'password': password,
+        'email': email,
       }),
     );
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:odinapp/Utlis/Constants.dart';
 import '../services/login_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 class LoginController {
   final usernameCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();
@@ -18,8 +20,7 @@ class LoginController {
       // Llama al método login del LoginService
       final result = await LoginService.login(username: user, password: pass);
 
-      if (result['code'] == "200") {
-        
+      if (result['code'] == Constants.successCode) {
         // Guardar token en SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('api_token', result['data']['token']);
@@ -28,7 +29,11 @@ class LoginController {
         return true;
       } else {
         // Muestra el mensaje de error del backend si existe
-        _showAlert(context, "Error", result['message'] ?? "Credenciales incorrectas");
+        _showAlert(
+          context,
+          "Error",
+          result['message'] ?? "Credenciales incorrectas",
+        );
         return false;
       }
     } catch (e) {
@@ -49,16 +54,10 @@ class LoginController {
       }
 
       // Llamar al método logout del LoginService
-      final result = await LoginService.logout(token: token);
-
-      if (result['code'] == "00") {
-        // Eliminar token de SharedPreferences
-        await prefs.remove('api_token');
-        return true;
-      } else {
-        _showAlert(context, "Error", result['message'] ?? "Error al cerrar sesión");
-        return false;
-      }
+      await LoginService.logout(token: token);
+      // Eliminar token de SharedPreferences
+      await prefs.remove('api_token');
+      return true;
     } catch (e) {
       _showAlert(context, "Error", "No se pudo cerrar sesión.\n$e");
       return false;
@@ -80,7 +79,7 @@ class LoginController {
           ElevatedButton(
             onPressed: () => Navigator.pop(context),
             child: const Text("OK"),
-          )
+          ),
         ],
       ),
     );

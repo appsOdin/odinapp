@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-            width: 340,
+            width: 400,
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: const Color(0xfff7f7f7),
@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 const SizedBox(height: 10),
                 const Image(image:  AssetImage('assets/img/logo.jpg'), height: 100),
-                const SizedBox(height: 24),
+                const SizedBox(height: 50),
                 TextField(
                   controller: controller.usernameCtrl,
                   decoration: const InputDecoration(
@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 24),
                 TextField(
                   controller: controller.passwordCtrl,
                   decoration: const InputDecoration(

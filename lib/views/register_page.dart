@@ -26,7 +26,7 @@ class _RegisterPageState extends State<RegisterPage> {
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-            width: 340,
+            width: 400,
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: const Color(0xfff7f7f7),
