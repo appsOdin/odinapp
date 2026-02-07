@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:odinapp/Utlis/Constants.dart';
+import 'package:odinapp/Utlis/CustomAlert.dart';
+import 'package:odinapp/Utlis/CustomFieldValidator.dart';
 import '../services/user_service.dart';
 
 class RegisterController {
@@ -12,85 +14,83 @@ class RegisterController {
 
   Future<bool> register(BuildContext context) async {
     // Validar todos los campos
-    if (!_validateFields(context)) {
-      return false;
-    }
-    try {
-      // Llamar al método createUser del UserService
-      final result = await UserService.createSuscriber(
-        id: idCtrl.text.trim(),
-        name: nameCtrl.text.trim(),
-        lastName: lastNameCtrl.text.trim(),
-        username: usernameCtrl.text.trim(),
-        password: passwordCtrl.text.trim(),
-        email: emailCtrl.text.trim(),
-      );
-      
-      if (result['code'] == Constants.successCode) {
-        await _showAlert(context, "¡Éxito!", "Usuario registrado correctamente");
-        return true;
-      } else {
-        await _showAlert(context, "Error", result['message'] ?? "Error al registrar usuario");
+    final isValid = await CustomFieldValidator.validateFields(
+      context: context,
+      fields: [
+        FieldValidationDescriptor(
+          controller: idCtrl,
+          minLength: 9,
+          fieldName: "Identificación",
+        ),
+        FieldValidationDescriptor(
+          controller: nameCtrl,
+          minLength: 2,
+          fieldName: "Nombre",
+        ),
+        FieldValidationDescriptor(
+          controller: lastNameCtrl,
+          minLength: 2,
+          fieldName: "Apellido",
+        ),
+        FieldValidationDescriptor(
+          controller: usernameCtrl,
+          minLength: 8,
+          fieldName: "Usuario",
+        ),
+        FieldValidationDescriptor(
+          controller: passwordCtrl,
+          minLength: 8,
+          fieldName: "Contraseña",
+        ),
+        FieldValidationDescriptor(
+          controller: emailCtrl,
+          minLength: 8,
+          fieldName: "Correo electrónico",
+        ),
+      ],
+    );
+    if (isValid) {
+      if (!CustomFieldValidator.isValidEmail(emailCtrl.text.trim())) {
+        await CustomAlert.showAlert(
+          context,
+          "Datos incompletos",
+          "Por favor, ingrese un correo electrónico válido",
+        );
         return false;
       }
-    } catch (e) {
-      await _showAlert(context, "Error", "No se pudo conectar al servidor.\n$e");
-      return false;
-    }
-  }
+      try {
+        // Llamar al método createUser del UserService
+        final result = await UserService.createSuscriber(
+          id: idCtrl.text.trim(),
+          name: nameCtrl.text.trim(),
+          lastName: lastNameCtrl.text.trim(),
+          username: usernameCtrl.text.trim(),
+          password: passwordCtrl.text.trim(),
+          email: emailCtrl.text.trim(),
+        );
 
-  bool _validateFields(BuildContext context) {
-    // Validar que todos los campos estén llenos
-    if (idCtrl.text.trim().isEmpty) {
-      _showAlert(context, "Datos incompletos", "Por favor, ingrese su identificación");
-      return false;
+        if (result['code'] == Constants.successCode) {
+          await CustomAlert.showAlert(
+            context,
+            "¡Éxito!",
+            "Usuario registrado correctamente",
+          );
+          return true;
+        } else {
+          await CustomAlert.showAlert(
+            context,
+            "Error",
+            result['message'] ?? Constants.errorMessage,
+          );
+          return false;
+        }
+      } catch (e) {
+        await CustomAlert.showAlert(context, "Error", Constants.errorMessage);
+        return false;
+      }
+    } else {
+      return false; // Si la validación de campos falla, no continuar
     }
-
-    if (nameCtrl.text.trim().isEmpty) {
-      _showAlert(context, "Datos incompletos", "Por favor, ingrese su nombre");
-      return false;
-    }
-
-    if (lastNameCtrl.text.trim().isEmpty) {
-      _showAlert(context, "Datos incompletos", "Por favor, ingrese sus apellidos");
-      return false;
-    }
-
-    if (usernameCtrl.text.trim().isEmpty) {
-      _showAlert(context, "Datos incompletos", "Por favor, ingrese un usuario");
-      return false;
-    }
-
-    // Validar que el usuario tenga al menos 3 caracteres
-    if (usernameCtrl.text.trim().length < 3) {
-      _showAlert(context, "Datos incompletos", "El usuario debe tener al menos 3 caracteres");
-      return false;
-    }
-
-    if (passwordCtrl.text.trim().isEmpty) {
-      _showAlert(context, "Datos incompletos", "Por favor, ingrese una contraseña");
-      return false;
-    }
-
-    // Validar que la contraseña tenga al menos 6 caracteres
-    if (passwordCtrl.text.trim().length < 6) {
-      _showAlert(context, "Datos incompletos", "La contraseña debe tener al menos 6 caracteres");
-      return false;
-    }
-
-    if (emailCtrl.text.trim().isEmpty) {
-      _showAlert(context, "Datos incompletos", "Por favor, ingrese su correo electrónico");
-      return false;
-    }
-
-    // Validar formato de correo electrónico
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegex.hasMatch(emailCtrl.text.trim())) {
-      _showAlert(context, "Datos incompletos", "Por favor, ingrese un correo válido");
-      return false;
-    }
-
-    return true;
   }
 
   void dispose() {
@@ -100,21 +100,5 @@ class RegisterController {
     usernameCtrl.dispose();
     passwordCtrl.dispose();
     emailCtrl.dispose();
-  }
-
-  Future<void> _showAlert(BuildContext context, String title, String msg) async {
-    return showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text(title),
-        content: Text(msg),
-        actions: [
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Aceptar"),
-          )
-        ],
-      ),
-    );
   }
 }

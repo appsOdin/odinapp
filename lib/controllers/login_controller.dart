@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:odinapp/Utlis/Constants.dart';
+import 'package:odinapp/Utlis/CustomAlert.dart';
+import 'package:odinapp/Utlis/CustomFieldValidator.dart';
 import '../services/login_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,35 +14,51 @@ class LoginController {
     String user = usernameCtrl.text.trim();
     String pass = passwordCtrl.text.trim();
 
-    if (user.isEmpty || pass.isEmpty) {
-      _showAlert(context, "Error", "Por favor, completa todos los campos");
-      return false;
-    }
+    /*
+    *Logica para validar campos
+    */
+    final valid = await CustomFieldValidator.validateFields(
+      context: context,
+      fields: [
+        FieldValidationDescriptor(
+          controller: usernameCtrl,
+          minLength: 8,
+          fieldName: "Usuario",
+        ),
+        FieldValidationDescriptor(
+          controller: passwordCtrl,
+          minLength: 8,
+          fieldName: "Contraseña",
+        ),
+      ],
+    );
+    if (valid) {
+      try {
+        // Llama al método login del LoginService
+        final result = await LoginService.login(username: user, password: pass);
 
-    try {
-      // Llama al método login del LoginService
-      final result = await LoginService.login(username: user, password: pass);
+        if (result['code'] == Constants.successCode) {
+          // Guardar token en SharedPreferences
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('api_token', result['data']['token']);
 
-      if (result['code'] == Constants.successCode) {
-        // Guardar token en SharedPreferences
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('api_token', result['data']['token']);
-
-        _showAlert(context, "¡Éxito!", "Inicio de sesión correcto");
-        return true;
-      } else {
-        // Muestra el mensaje de error del backend si existe
-        _showAlert(
-          context,
-          "Error",
-          result['message'] ?? "Credenciales incorrectas",
-        );
+          CustomAlert.showAlert(context, "¡Éxito!", "Inicio de sesión correcto");
+          return true;
+        } else {
+          // Muestra el mensaje de error del backend si existe
+          CustomAlert.showAlert(
+            context,
+            "Error",
+            result['message'] ?? Constants.errorMessage,
+          );
+          return false;
+        }
+      } catch (e) {
+        CustomAlert.showAlert(context, "Error",  Constants.errorMessage);
         return false;
       }
-    } catch (e) {
-      _showAlert(context, "Error", "Ha ocurrido un error.\n$e");
-      return false;
     }
+    return false;
   }
 
   Future<bool> logout(BuildContext context) async {
@@ -50,7 +68,7 @@ class LoginController {
       final token = prefs.getString('api_token');
 
       if (token == null || token.isEmpty) {
-        _showAlert(context, "Error", "No hay sesión activa");
+        CustomAlert.showAlert(context, "Error", "No hay sesión activa");
         return false;
       }
 
@@ -60,41 +78,57 @@ class LoginController {
       await prefs.remove('api_token');
       return true;
     } catch (e) {
-      _showAlert(context, "Error", "Ha ocurrido un error.\n$e");
+      CustomAlert.showAlert(context, "Error",  Constants.errorMessage);
       return false;
     }
   }
 
-  Future<bool> recover(BuildContext context) async {  
-    String email = emailCtrl.text.trim();
+  Future<bool> recover(BuildContext context) async {
+    final valid = await CustomFieldValidator.validateFields(
+      context: context,
+      fields: [
+        FieldValidationDescriptor(
+          controller: emailCtrl,
+          minLength: 8,
+          fieldName: "Correo electrónico",
+        ),
+      ],
+    );
+    if (valid ) {
+      try {
+        // Llama al método recoverAccess del LoginService
+        if (!CustomFieldValidator.isValidEmail(emailCtrl.text.trim())) {
+          await CustomAlert.showAlert(
+            context,
+            "Datos incompletos",
+            "Por favor, ingrese un correo electrónico válido",
+          );
+          return false;
+        }
+        final result = await LoginService.recoverAccess(email: emailCtrl.text.trim());
 
-    if (email.isEmpty) {
-      _showAlert(context, "Error", "Por favor, ingresa tu correo electrónico");
-      return false;
-    }
-
-    try {
-      // Llama al método recoverAccess del LoginService
-      final result = await LoginService.recoverAccess(email: email);
-
-      if (result['code'] == Constants.successCode) {
-        _showAlert(context, "¡Éxito!", "Instrucciones de recuperación enviadas a tu correo");
-        return true;
-      } else {
-        _showAlert(
-          context,
-          "Error",
-          result['message'] ?? "No se pudo iniciar recuperación",
-        );
+        if (result['code'] == Constants.successCode) {
+          CustomAlert.showAlert(
+            context,
+            "¡Éxito!",
+            "Instrucciones de recuperación enviadas a tu correo",
+          );
+          return true;
+        } else {
+          CustomAlert.showAlert(
+            context,
+            "Error",
+            result['message'] ?? Constants.errorMessage,
+          );
+          return false;
+        }
+      } catch (e) {
+        CustomAlert.showAlert(context, "Error",  Constants.errorMessage);
         return false;
       }
-    } catch (e) {
-      _showAlert(context, "Error", "Ha ocurrido un error.\n$e");
-      return false;
     }
+    return false;
   }
-
-
 
   void dispose() {
     usernameCtrl.dispose();
@@ -102,19 +136,4 @@ class LoginController {
     emailCtrl.dispose();
   }
 
-  void _showAlert(BuildContext context, String title, String msg) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text(title),
-        content: Text(msg),
-        actions: [
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Aceptar"),
-          ),
-        ],
-      ),
-    );
-  }
 }

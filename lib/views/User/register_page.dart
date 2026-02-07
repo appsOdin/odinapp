@@ -40,7 +40,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const Image(image: AssetImage('assets/img/logo.jpg'), height: 100),
                 const SizedBox(height: 24),
                 const Text(
-                  'Crear Cuenta',
+                  'Crear cuenta',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
