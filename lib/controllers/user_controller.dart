@@ -26,15 +26,17 @@ class RegisterController {
           controller: nameCtrl,
           minLength: 2,
           fieldName: "Nombre",
+          allowSpaces: true, // Permitir espacios en el nombre
         ),
         FieldValidationDescriptor(
           controller: lastNameCtrl,
           minLength: 2,
           fieldName: "Apellido",
+          allowSpaces: true, // Permitir espacios en el apellido
         ),
         FieldValidationDescriptor(
           controller: usernameCtrl,
-          minLength: 8,
+          minLength: 6,
           fieldName: "Usuario",
         ),
         FieldValidationDescriptor(

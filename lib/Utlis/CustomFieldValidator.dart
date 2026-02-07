@@ -5,11 +5,13 @@ class FieldValidationDescriptor {
   final TextEditingController controller;
   final int minLength;
   final String fieldName;
+  final bool allowSpaces;
 
   FieldValidationDescriptor({
     required this.controller,
     required this.minLength,
     required this.fieldName,
+    this.allowSpaces = false,
   });
 }
 
@@ -28,7 +30,7 @@ class CustomFieldValidator {
         );
         return false;
       }
-      if (text.contains(' ')) {
+      if (!descriptor.allowSpaces && text.contains(' ')) {
         await CustomAlert.showAlert(
           context,
           "Datos incompletos",

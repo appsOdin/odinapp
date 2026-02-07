@@ -22,7 +22,7 @@ class LoginController {
       fields: [
         FieldValidationDescriptor(
           controller: usernameCtrl,
-          minLength: 8,
+          minLength: 6,
           fieldName: "Usuario",
         ),
         FieldValidationDescriptor(

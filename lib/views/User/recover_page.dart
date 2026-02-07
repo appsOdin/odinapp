@@ -40,7 +40,7 @@ class _RecoverPageState extends State<RecoverPage> {
                 const SizedBox(height: 50),
                 TextField(
                   controller: controller.emailCtrl,
-                  inputFormatters: [LengthLimitingTextInputFormatter(20)], // Limitar a 20 caracteres
+                  inputFormatters: [LengthLimitingTextInputFormatter(100)], // Limitar a 100 caracteres
                   decoration: const InputDecoration(
                     labelText: 'Correo electrónico',
                     fillColor: Color.fromARGB(255, 255, 255, 255),
