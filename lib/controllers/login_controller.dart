@@ -27,7 +27,7 @@ class LoginController {
         ),
         FieldValidationDescriptor(
           controller: passwordCtrl,
-          minLength: 8,
+          minLength: 4,
           fieldName: "Contraseña",
         ),
       ],

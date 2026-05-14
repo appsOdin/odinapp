@@ -62,6 +62,14 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
+              leading: Icon(Icons.article_outlined),
+              title: Text('Artículos'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/articles');
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.logout),
               title: Text('Salir'),
               onTap: () async {
