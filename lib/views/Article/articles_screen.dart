@@ -97,7 +97,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                   if (snapshot.hasError) {
                     return Center(
                       child: Text(
-                        'Error al cargar artículos: ${snapshot.error}',
+                        'Error al cargar artículos',
                         textAlign: TextAlign.center,
                       ),
                     );
@@ -159,36 +159,40 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                     Expanded(
                                       flex: 2,
                                       child: Text(
-                                        'ARTICULO',
+                                        'Artículo',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w700,
+                                          fontSize: 12,
                                         ),
                                       ),
                                     ),
                                     Expanded(
                                       flex: 5,
                                       child: Text(
-                                        'DESCRIPCIÓN',
+                                        'Descripción',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w700,
+                                          fontSize: 12,
                                         ),
                                       ),
                                     ),
                                     Expanded(
                                       flex: 2,
                                       child: Text(
-                                        'PRECIO',
+                                        'Precio',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w700,
+                                          fontSize: 12,
                                         ),
                                       ),
                                     ),
                                     Expanded(
                                       flex: 1,
                                       child: Text(
-                                        'ACCIONES',
+                                        'Ver',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w700,
+                                          fontSize: 12,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -214,12 +218,20 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                         children: [
                                           Expanded(
                                             flex: 2,
-                                            child: Text(article.id),
+                                            child: Text(
+                                              article.id,
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                              ),
+                                            ),
                                           ),
                                           Expanded(
                                             flex: 5,
                                             child: Text(
                                               article.description,
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                              ),
                                               softWrap: true,
                                             ),
                                           ),
@@ -228,6 +240,9 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                             child: Text(
                                               _currencyFormat.format(
                                                 article.price,
+                                              ),
+                                              style: const TextStyle(
+                                                fontSize: 12,
                                               ),
                                             ),
                                           ),
@@ -245,7 +260,10 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                                     context,
                                                     MaterialPageRoute<void>(
                                                       builder: (_) =>
-                                                          const ArticleDetailScreen(),
+                                                          ArticleDetailScreen(
+                                                            articleId:
+                                                                article.id,
+                                                          ),
                                                     ),
                                                   );
                                                 },
