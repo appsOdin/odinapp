@@ -70,6 +70,14 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
+              leading: Icon(Icons.lock_reset),
+              title: Text('Cambiar contraseña'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/update-password');
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.logout),
               title: Text('Salir'),
               onTap: () async {

@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import '../../models/article_model.dart';
 import '../../services/article_service.dart';
 import '../../theme/app_theme.dart';
-import 'article_detail_screen.dart';
+import 'article_detail_page.dart';
 
 class ArticlesScreen extends StatefulWidget {
   const ArticlesScreen({super.key});
@@ -251,6 +251,13 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                             child: Align(
                                               alignment: Alignment.topCenter,
                                               child: IconButton(
+                                                padding: EdgeInsets.zero,
+                                                constraints:
+                                                    const BoxConstraints(
+                                                      minWidth: 32,
+                                                      minHeight: 32,
+                                                    ),
+                                                iconSize: 20,
                                                 icon: const Icon(
                                                   Icons.visibility,
                                                 ),
@@ -281,8 +288,11 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                      Wrap(
+                        alignment: WrapAlignment.end,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 12,
+                        runSpacing: 8,
                         children: [
                           ElevatedButton(
                             onPressed: safeCurrentPage > 1
@@ -292,9 +302,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                 : null,
                             child: const Text('Anterior'),
                           ),
-                          const SizedBox(width: 12),
                           Text('Página $safeCurrentPage de $totalPages'),
-                          const SizedBox(width: 12),
                           ElevatedButton(
                             onPressed: safeCurrentPage < totalPages
                                 ? () {

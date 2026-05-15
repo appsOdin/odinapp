@@ -1,4 +1,4 @@
-package com.example.odinapp
+package com.radiadores.odinapp
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -266,7 +266,13 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                                   child: Text(stock.name, softWrap: true),
                                 ),
                                 const SizedBox(width: 12),
-                                Text(stock.available.toStringAsFixed(2)),
+                                Flexible(
+                                  child: Text(
+                                    stock.available.toStringAsFixed(2),
+                                    textAlign: TextAlign.right,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
                               ],
                             ),
                           );
