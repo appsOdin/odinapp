@@ -260,16 +260,22 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 8),
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Expanded(
-                                  child: Text(stock.name, softWrap: true),
+                                  child: Text(
+                                    stock.name,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                                 const SizedBox(width: 12),
-                                Flexible(
+                                SizedBox(
+                                  width: 92,
                                   child: Text(
                                     stock.available.toStringAsFixed(2),
                                     textAlign: TextAlign.right,
+                                    maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),

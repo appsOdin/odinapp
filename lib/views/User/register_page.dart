@@ -42,7 +42,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   children: [
                     const SizedBox(height: 10),
                     const Image(
-                      image: AssetImage('assets/img/logo.jpg'),
+                      image: AssetImage('assets/img/logo.png'),
                       height: 100,
                     ),
                     const SizedBox(height: 24),
